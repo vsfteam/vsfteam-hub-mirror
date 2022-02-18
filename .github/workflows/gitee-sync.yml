@@ -1,0 +1,40 @@
+name: gitee sync
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # UTC 17:00 -> CST (China) 1:00, see https://datetime360.com/cn/utc-cst-china-time/
+    - cron: '0 17 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout vsf
+      uses: actions/checkout@v2
+      with:
+        repository: vsfteam/vsf
+    
+    - name: get all repos
+      id: repos
+      run: |
+        repos="vsf,vsf-all-in-one,$(cat .gitmodules |grep -E 'url.*\.\.\/' | cut -d'/' -f2- | tr '\n' ',')"
+        echo "$repos"
+        echo "::set-output name=static_list::$repos"
+      shell: bash
+      
+    - name: mirror the github repos to gitee.
+      uses: Yikun/hub-mirror-action@master
+      with:
+        src: github/vsfteam
+        dst: gitee/vsfos
+        account_type: org
+        dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+        dst_token: ${{ secrets.GITEE_TOKEN }}
+        clone_style: "ssh"
+        force_update: true
+        debug: true
+        static_list: ${{ steps.repos.outputs.static_list }}
