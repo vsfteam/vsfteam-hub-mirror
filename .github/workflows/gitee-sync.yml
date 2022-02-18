@@ -22,8 +22,8 @@ jobs:
       id: repos
       run: |
         repos="vsf,vsf-all-in-one,$(cat .gitmodules |grep -E 'url.*\.\.\/' | cut -d'/' -f2- | tr '\n' ',')"
-        echo "$repos"
-        echo "::set-output name=static_list::$repos"
+        echo "${repos::-1}"
+        echo "::set-output name=static_list::${repos::-1}"
       shell: bash
       
     - name: mirror the github repos to gitee.
