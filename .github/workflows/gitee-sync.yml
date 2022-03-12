@@ -13,11 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout vsf
-      uses: actions/checkout@v2
-      with:
-        repository: vsfteam/vsf
-
     - name: Get repository list exclude private and fork
       id: repo
       uses: yi-Xu-0100/repo-list-generator@v1.0.1
@@ -32,4 +27,4 @@ jobs:
         dst_token: ${{ secrets.GITEE_TOKEN }}
         force_update: true
         debug: true
-        static_list: ${{ steps.repo.outputs.repoList }},${{steps.repo.outputs.repoList_FORK}}
+        static_list: ${{ steps.repo.outputs.repoList }}, ${{ steps.repo.outputs.repoList_FORK }}
