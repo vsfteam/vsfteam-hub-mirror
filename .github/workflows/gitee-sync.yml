@@ -17,7 +17,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: vsfteam/vsf
-    
+
     - name: get all repos
       id: repos
       run: |
@@ -25,7 +25,7 @@ jobs:
         echo "${repos::-1}"
         echo "::set-output name=static_list::${repos::-1}"
       shell: bash
-      
+
     - name: mirror the github repos to gitee.
       uses: Yikun/hub-mirror-action@master
       with:
@@ -34,7 +34,6 @@ jobs:
         account_type: org
         dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
         dst_token: ${{ secrets.GITEE_TOKEN }}
-        clone_style: "ssh"
         force_update: true
         debug: true
         static_list: ${{ steps.repos.outputs.static_list }}
