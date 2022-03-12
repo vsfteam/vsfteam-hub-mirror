@@ -18,22 +18,18 @@ jobs:
       with:
         repository: vsfteam/vsf
 
-    - name: get all repos
-      id: repos
-      run: |
-        repos="vsf,vsf-all-in-one,$(cat .gitmodules |grep -E 'url.*\.\.\/' | cut -d'/' -f2- | tr '\n' ',')"
-        echo "${repos::-1}"
-        echo "::set-output name=static_list::${repos::-1}"
-      shell: bash
+    - name: Get repository list exclude private and fork
+      id: repo
+      uses: yi-Xu-0100/repo-list-generator@v1.0.1
 
     - name: mirror the github repos to gitee.
       uses: Yikun/hub-mirror-action@master
       with:
         src: github/vsfteam
-        dst: gitee/vsfos
+        dst: gitee/vsfteam
         account_type: org
         dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
         dst_token: ${{ secrets.GITEE_TOKEN }}
         force_update: true
         debug: true
-        static_list: ${{ steps.repos.outputs.static_list }}
+        static_list: ${{ steps.repo.outputs.repoList }},${{steps.repo.outputs.repoList_FORK}}
