@@ -28,3 +28,4 @@ jobs:
         force_update: true
         debug: true
         static_list: ${{ steps.repo.outputs.repoList }}, ${{ steps.repo.outputs.repoList_FORK }}
+        black_list: vsfteam.github.io
